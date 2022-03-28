@@ -44,44 +44,54 @@ class SceneAgar extends Phaser.Scene {
     // this.matter.add.image(150, 200, "agar")
     // this.matter.add.image(150, 250, "agar")
 
-    this.add.image(2, 2, "pixel")
-    let ang = 225, xx = 100, yy = 100, lastY, lastX,et=false
-    for (let r = 1; r <= 200; r++) {
-      var radius = r;
-      var x = radius * Math.sin(Math.PI * 2 * ang / 360);
-      var y = radius * Math.cos(Math.PI * 2 * ang / 360);
-      x = (xx + Math.round(x * 100) / 100).toFixed(0)
-      y = (yy + Math.round(y * 100) / 100).toFixed(0)
-      console.log(x + "_" + y)
-      // this.add.image(x, y, "pixel")
-      if (x>=200||y>=200){
-        if (!et){
-          lastX = x
-          lastY = y
-
-        }
-        et=true
-      }
-      if (x<=0){
-        if (!et){
-          lastX = x
-          lastY = y
-
-        }
-        et=true
-      }
-      if (y<=0){
-        if (!et){
-          lastX = x
-          lastY = y
-
-        }
-        et=true
-      }
+    let y2Pos=200,x2Pos=99,y1Pos=100,x1Pos=100
+    var angle = Math.atan2(y2Pos - y1Pos, x2Pos - x1Pos) * 180 / Math.PI + 180;
+    if (angle>=270){
+      console.log(360-(parseInt(angle.toFixed(0))-270));
+    }else {
+      console.log(Math.abs(angle.toFixed(0)-270));
     }
+    // console.log(Math.abs(angle.toFixed(0)))
 
-    console.log(lastX + "-" + lastY)
-    this.add.image(lastX, lastY, "agar")
+
+    // this.add.image(2, 2, "pixel")
+    // let ang = 225, xx = 100, yy = 100, lastY, lastX,et=false
+    // for (let r = 1; r <= 200; r++) {
+    //   var radius = r;
+    //   var x = radius * Math.sin(Math.PI * 2 * ang / 360);
+    //   var y = radius * Math.cos(Math.PI * 2 * ang / 360);
+    //   x = (xx + Math.round(x * 100) / 100).toFixed(0)
+    //   y = (yy + Math.round(y * 100) / 100).toFixed(0)
+    //   console.log(x + "_" + y)
+    //   // this.add.image(x, y, "pixel")
+    //   if (x>=200||y>=200){
+    //     if (!et){
+    //       lastX = x
+    //       lastY = y
+    //
+    //     }
+    //     et=true
+    //   }
+    //   if (x<=0){
+    //     if (!et){
+    //       lastX = x
+    //       lastY = y
+    //
+    //     }
+    //     et=true
+    //   }
+    //   if (y<=0){
+    //     if (!et){
+    //       lastX = x
+    //       lastY = y
+    //
+    //     }
+    //     et=true
+    //   }
+    // }
+    //
+    // console.log(lastX + "-" + lastY)
+    // this.add.image(lastX, lastY, "agar")
 
     // for (let a = 1; a <= 360; a++) {
     //     var radius = 6;
