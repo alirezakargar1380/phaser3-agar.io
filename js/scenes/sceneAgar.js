@@ -64,7 +64,7 @@ class SceneAgar extends Phaser.Scene {
       y = (yy + Math.round(y * 100) / 100)//.toFixed(0)
 
       if (x >= 0 && y >= 0) {
-        this.where_go.push(x + "_" + y)
+        // this.where_go.push(x + "_" + y)
         // console.log(x + "_" + y)
       }
 
@@ -118,23 +118,71 @@ class SceneAgar extends Phaser.Scene {
     // }
 
 
-    this.add.image(175,25, "shock_dropzone")
+    this.shock_dropzone = this.add.image(-150,-150, "shock_dropzone")
 
-    this.shock = this.add.image(175,25, "shock")
+    this.shock = this.add.image(-150, -150, "shock")
     this.shock.setInteractive()
     this.input.setDraggable(this.shock)
 
-    this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-      if (parseInt(dragX.toFixed(0)) <= (gameObject.input.dragStartX - 20))
-        return
-      gameObject.x = dragX;
-      gameObject.y = dragY;
-    }, this);
+    this.moveShock = true
+    this.shockStartX = null
+    this.shockStartY = null
 
-    this.input.on('dragend', function (pointer, gameObject, dropped) {
-      gameObject.x = gameObject.input.dragStartX;
-      gameObject.y = gameObject.input.dragStartY;
-    }, this);
+    this.input.on("pointerdown", (gameObject) => {
+      // console.log("pointerdown")
+      this.moveShock = false
+      let x = parseInt(gameObject.position.x.toFixed(0)), y = parseInt(gameObject.position.y.toFixed(0))
+      this.shock.x = x
+      this.shock.y = y
+      this.shock_dropzone.x = x
+      this.shock_dropzone.y = y
+    })
+
+    this.input.on("pointermove", (gameObject) => {
+      // console.log("pointermove")
+      let x = parseInt(gameObject.position.x.toFixed(0)), y = parseInt(gameObject.position.y.toFixed(0))
+
+
+      this.shock.x = x
+      this.shock.y = y
+      if (this.moveShock === false) {
+        this.where_go = []
+        let angle = this.get_angle(this.shock_dropzone.x, this.shock_dropzone.y, this.shock.x, this.shock.y)
+        console.log(angle)
+        this.get_route_by_angle(angle)
+        return// this._shock()
+      }
+      this.shock_dropzone.x = x
+      this.shock_dropzone.y = y
+    })
+
+    this.input.on("pointerup", () => {
+      this.moveShock = true
+      // this.shock.x = this.shock_dropzone.x
+      // this.shock.y = this.shock_dropzone.y
+      this.shock_dropzone.x = -150
+      this.shock_dropzone.y = -150
+      this.shock.x = -150
+      this.shock.y = -150
+    })
+
+
+    // this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+    //   console.log("drag")
+    //   this.where_go = []
+    //   // if (parseInt(dragX.toFixed(0)) <= (gameObject.input.dragStartX - 20))
+    //   //   return gameObject.y = dragY;
+    //   gameObject.x = dragX;
+    //   gameObject.y = dragY;
+    //   // console.log(gameObject.input.dragStartX)
+    //   let angle = this.get_angle(gameObject.input.dragStartX, gameObject.input.dragStartY, gameObject.x, gameObject.y)
+    //   this.get_route_by_angle(angle)
+    // }, this);
+
+    // this.input.on('dragend', function (pointer, gameObject, dropped) {
+    //   gameObject.x = gameObject.input.dragStartX;
+    //   gameObject.y = gameObject.input.dragStartY;
+    // }, this);
 
     this.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
       bodyB.gameObject.destroy()
@@ -142,9 +190,14 @@ class SceneAgar extends Phaser.Scene {
 
   }
 
+  _shock() {
+
+  }
+
   update() {
     if (this.where_go.length !== 0) {
       let xAndY = this.where_go[0]
+      // console.log(xAndY)
       xAndY = xAndY.split("_")
       let x = parseInt(xAndY[0]), y = parseInt(xAndY[1])
       this.agar.x = x
@@ -178,4 +231,37 @@ class SceneAgar extends Phaser.Scene {
       this.agar.x -= 1
     }
   }
+
+  get_angle(x1, y1, x2, y2) {
+    let angle_final
+    let angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI + 180;
+    if (angle>=270){
+      angle_final = 360 - (parseInt(angle.toFixed(0))-270)
+    }else {
+      angle_final = Math.abs(angle.toFixed(0)-270)
+    }
+
+    return angle_final
+  }
+
+  get_route_by_angle(angle) {
+    let ang = angle
+    for (let r = 1; r <= 200; r++) {
+      var radius = r;
+      var x = radius * Math.sin(Math.PI * 2 * ang / 360);
+      var y = radius * Math.cos(Math.PI * 2 * ang / 360);
+      x = (this.agar.x + Math.round(x * 100) / 100).toFixed(0)
+      y = (this.agar.y + Math.round(y * 100) / 100).toFixed(0)
+      x = parseInt(x)
+      y = parseInt(y)
+
+
+      if (x >= 0 && x <= 200 && y >= 0 && y <= 200) {
+        this.where_go.push(x + "_" + y)
+      }
+
+    }
+
+  }
+
 }
