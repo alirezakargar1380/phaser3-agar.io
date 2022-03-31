@@ -9,54 +9,64 @@ class SceneAgar extends Phaser.Scene {
     this.load.image("pixel", "images/pixel.png");
     this.load.image("shock", "images/shock.png");
     this.load.image("shock_dropzone", "images/shock_dropzone.png");
+    this.load.plugin("rexmovetoplugin",
+        "js/rexmovetoplugin.min.js",
+        true
+    );
+
   }
 
   create() {
-    this.cameras.main.setSize(300, 300);
+    // this.scale.startFullscreen();
+    // this.cameras.main.setSize(300, 300);
 
-    this.graphics = this.add.graphics()
-    this.graphics.lineStyle(5, 0xFF00FF, 1.0);
-    this.graphics.beginPath();
-    this.graphics.moveTo(0, 0);
-    this.graphics.lineTo(200, 200);
-    this.graphics.closePath();
-    this.graphics.strokePath();
-
-    this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
-    this.graphics.beginPath();
-    this.graphics.moveTo(1920, 1080);
-    this.graphics.lineTo(200, 200);
-    this.graphics.closePath();
-    this.graphics.strokePath();
-
-    this.graphics.lineStyle(5, 0xFFFF0F, 1.0);
-    this.graphics.beginPath();
-    this.graphics.moveTo(0, 1080);
-    this.graphics.lineTo(200, 200);
-    this.graphics.closePath();
-    this.graphics.strokePath();
-
-    this.graphics.lineStyle(5, 0xFFFF0F, 1.0);
-    this.graphics.beginPath();
-    this.graphics.moveTo(1920, 0);
-    this.graphics.lineTo(200, 200);
-    this.graphics.closePath();
-    this.graphics.strokePath();
+    // this.graphics = this.add.graphics()
+    // this.graphics.lineStyle(5, 0xFF00FF, 1.0);
+    // this.graphics.beginPath();
+    // this.graphics.moveTo(0, 0);
+    // this.graphics.lineTo(200, 200);
+    // this.graphics.closePath();
+    // this.graphics.strokePath();
+    //
+    // this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
+    // this.graphics.beginPath();
+    // this.graphics.moveTo(1920, 1080);
+    // this.graphics.lineTo(200, 200);
+    // this.graphics.closePath();
+    // this.graphics.strokePath();
+    //
+    // this.graphics.lineStyle(5, 0xFFFF0F, 1.0);
+    // this.graphics.beginPath();
+    // this.graphics.moveTo(0, 1080);
+    // this.graphics.lineTo(200, 200);
+    // this.graphics.closePath();
+    // this.graphics.strokePath();
+    //
+    // this.graphics.lineStyle(5, 0xFFFF0F, 1.0);
+    // this.graphics.beginPath();
+    // this.graphics.moveTo(1920, 0);
+    // this.graphics.lineTo(200, 200);
+    // this.graphics.closePath();
+    // this.graphics.strokePath();
 
     this.agar = this.matter.add.image(100, 100, "agar")
     // this.matter.add.image(150, 200, "agar")
     // this.matter.add.image(150, 250, "agar")
 
-    let y2Pos=90,x2Pos=90,y1Pos=100,x1Pos=100
+    this.moveTo = this.plugins.get('rexmovetoplugin').add(this.agar);
+    this.moveTo.setSpeed(100);
+
+
+    let y2Pos = 90, x2Pos = 90, y1Pos = 100, x1Pos = 100
     var angle = Math.atan2(y2Pos - y1Pos, x2Pos - x1Pos) * 180 / Math.PI + 180;
-    if (angle>=270){
-      console.log(360-(parseInt(angle.toFixed(0))-270));
-    }else {
-      console.log(Math.abs(angle.toFixed(0)-270));
+    if (angle >= 270) {
+      console.log(360 - (parseInt(angle.toFixed(0)) - 270));
+    } else {
+      console.log(Math.abs(angle.toFixed(0) - 270));
     }
 
-    let ang = 225, xx = 100, yy = 100, lastY, lastX, et=false
-    for (let r = 1; r <= 200; r++) {
+    let ang = 45, xx = 100, yy = 100, lastY, lastX, et = false
+    for (let r = 1; r <= 1500; r++) {
       var radius = r;
       var x = radius * Math.sin(Math.PI * 2 * ang / 360);
       var y = radius * Math.cos(Math.PI * 2 * ang / 360);
@@ -69,34 +79,34 @@ class SceneAgar extends Phaser.Scene {
       }
 
       this.add.image(x, y, "pixel")
-      if (x>=200||y>=200){
-        if (!et){
+      if (x >= game.config.width || y >= game.config.height) {
+        if (!et) {
           lastX = x
           lastY = y
 
         }
-        et=true
+        et = true
       }
-      if (x<=0){
-        if (!et){
+      if (x <= 0) {
+        if (!et) {
           lastX = x
           lastY = y
 
         }
-        et=true
+        et = true
       }
-      if (y<=0){
-        if (!et){
+      if (y <= 0) {
+        if (!et) {
           lastX = x
           lastY = y
 
         }
-        et=true
+        et = true
       }
     }
 
     // console.log(lastX + "-" + lastY)
-    // this.add.image(lastX, lastY, "agar")
+    this.add.image(lastX, lastY, "agar")
 
     // this.where_go.shift()
     // this.where_go.shift()
@@ -118,7 +128,7 @@ class SceneAgar extends Phaser.Scene {
     // }
 
 
-    this.shock_dropzone = this.add.image(-150,-150, "shock_dropzone")
+    this.shock_dropzone = this.add.image(-150, -150, "shock_dropzone")
 
     this.shock = this.add.image(-150, -150, "shock")
     this.shock.setInteractive()
@@ -148,7 +158,6 @@ class SceneAgar extends Phaser.Scene {
       if (this.moveShock === false) {
         this.where_go = []
         let angle = this.get_angle(this.shock_dropzone.x, this.shock_dropzone.y, this.shock.x, this.shock.y)
-        console.log(angle)
         this.get_route_by_angle(angle)
         return// this._shock()
       }
@@ -165,7 +174,6 @@ class SceneAgar extends Phaser.Scene {
       this.shock.x = -150
       this.shock.y = -150
     })
-
 
     // this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
     //   console.log("drag")
@@ -188,65 +196,94 @@ class SceneAgar extends Phaser.Scene {
       bodyB.gameObject.destroy()
     });
 
-  }
-
-  _shock() {
-
+    this.moveIt = true
   }
 
   update() {
+    if (!this.moveIt) {
+      this.tweens.add({
+        targets: this.agar,
+        props: {
+          x: {
+            value: '0', ease: 'InOut'
+          },
+          y: {
+            value: '0', ease: 'InOut'
+          }
+        },
+        duration: 450
+      });
+      this.moveIt = true
+    }
+    console.log(this.agar.x)
     if (this.where_go.length !== 0) {
       let xAndY = this.where_go[0]
-      // console.log(xAndY)
       xAndY = xAndY.split("_")
       let x = parseInt(xAndY[0]), y = parseInt(xAndY[1])
-      this.agar.x = x
-      this.agar.y = y
+
+      this.moveTo.moveTo({
+        x: x,
+        y: y
+      });
+      // this.tweens.add({
+      //   targets: this.agar,
+      //   props: {
+      //     x: {
+      //       value: x, ease: ''
+      //     },
+      //     y: {
+      //       value: y, ease: ''
+      //     }
+      //   },
+      //   duration: 3500,
+      //   frameRate: 300
+      // });
+
       this.where_go.shift()
     }
 
-    var cursors = this.input.keyboard.createCursorKeys();
-    if (cursors.up.isDown) {
-      if (this.cameras.main.scrollY === 0)
-        return
-      this.cameras.main.scrollY -= 1;
-      this.agar.y -= 1
-    }
-    if (cursors.down.isDown) {
-      if (this.cameras.main.scrollY === (1080 - 300))
-        return
-      this.cameras.main.scrollY += 1;
-      this.agar.y += 1
-    }
-    if (cursors.right.isDown) {
-      if (this.cameras.main.scrollX === (1920 - 300))
-        return
-      this.cameras.main.scrollX += 1;
-      this.agar.x += 1
-    }
-    if (cursors.left.isDown) {
-      if (this.cameras.main.scrollX === 0)
-        return
-      this.cameras.main.scrollX -= 1;
-      this.agar.x -= 1
-    }
+    // var cursors = this.input.keyboard.createCursorKeys();
+    // if (cursors.up.isDown) {
+    //   if (this.cameras.main.scrollY === 0)
+    //     return
+    //   this.cameras.main.scrollY -= 1;
+    //   this.agar.y -= 1
+    // }
+    // if (cursors.down.isDown) {
+    //   if (this.cameras.main.scrollY === (1080 - 300))
+    //     return
+    //   this.cameras.main.scrollY += 1;
+    //   this.agar.y += 1
+    // }
+    // if (cursors.right.isDown) {
+    //   if (this.cameras.main.scrollX === (1920 - 300))
+    //     return
+    //   this.cameras.main.scrollX += 1;
+    //   this.agar.x += 1
+    // }
+    // if (cursors.left.isDown) {
+    //   if (this.cameras.main.scrollX === 0)
+    //     return
+    //   this.cameras.main.scrollX -= 1;
+    //   this.agar.x -= 1
+    // }
   }
 
   get_angle(x1, y1, x2, y2) {
     let angle_final
     let angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI + 180;
-    if (angle>=270){
-      angle_final = 360 - (parseInt(angle.toFixed(0))-270)
-    }else {
-      angle_final = Math.abs(angle.toFixed(0)-270)
+    if (angle >= 270) {
+      angle_final = 360 - (parseInt(angle.toFixed(0)) - 270)
+    } else {
+      angle_final = Math.abs(angle.toFixed(0) - 270)
     }
 
     return angle_final
   }
 
   get_route_by_angle(angle) {
-    let ang = angle
-    for (let r = 1; r <= 200; r++) {
+    let ang = angle, lastY, lastX, setX = false, et = false
+    for (let r = 1; r <= 2000; r++) {
       var radius = r;
       var x = radius * Math.sin(Math.PI * 2 * ang / 360);
       var y = radius * Math.cos(Math.PI * 2 * ang / 360);
@@ -255,12 +292,45 @@ class SceneAgar extends Phaser.Scene {
       x = parseInt(x)
       y = parseInt(y)
 
+      // if (x >= 0 && x <= game.config.width && y >= 0 && y <= game.config.height) {
+      //   this.where_go.push(x + "_" + y)
+      // }
 
-      if (x >= 0 && x <= 200 && y >= 0 && y <= 200) {
-        this.where_go.push(x + "_" + y)
+      if (x >= game.config.width || y >= game.config.height) {
+        if (!et) {
+          lastX = x
+          lastY = y
+
+        }
+        et = true
+      }
+
+      if (x <= 0) {
+        if (!et) {
+          lastX = x
+          lastY = y
+
+        }
+        et = true
+      }
+
+      if (y <= 0) {
+        if (!et) {
+          lastX = x
+          lastY = y
+
+        }
+        et = true
       }
 
     }
+
+    if (lastY !== undefined || lastX !== undefined) {
+      this.where_go.push(lastX + "_" + lastY)
+    }
+
+    // et = false
+    // console.log(lastX + "_" + lastY)
 
   }
 
