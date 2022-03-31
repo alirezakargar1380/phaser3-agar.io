@@ -21,20 +21,20 @@ class SceneAgar extends Phaser.Scene {
     //   name: '',
     //   x: 0,
     //   y: 0,
-    //   width: 500,
+    //   width: 1920,
     //   height: 500,
-    //   zoom: 2,
+    //   zoom: 1,
     //   rotation: 0,
-    //   scrollX: -600,
-    //   scrollY: -200,
+    //   scrollX: 0,
+    //   scrollY: 0,
     //   roundPixels: true,
     //   visible: true,
     //   backgroundColor: '#8888aa',
     //   bounds: null,
     // });
-    // console.log(this.cameras.cameras[1].pan(100, 100, 2000))
 
-    // this.cameras.main.setSize(1330, 975);
+
+    // this.cameras.main.zoom = 2
 
     this.graphics = this.add.graphics()
     this.graphics.lineStyle(5, 0xFF00FF, 1.0);
@@ -151,45 +151,44 @@ class SceneAgar extends Phaser.Scene {
     // }
 
 
-    this.shock_dropzone = this.add.image(-150, -150, "shock_dropzone")
-    this.shock = this.add.image(-150, -150, "shock")
+    this.shock_dropzone = this.add.image(1920/2 + 200, 768/2, "shock_dropzone")//.setScrollFactor(0)
+    this.shock = this.add.image(1920/2 + 200, 768/2, "shock")//.setScrollFactor(0)
+    // this.shock.setInteractive()
+    this.shock_dropzone.setScrollFactor(0)
+    this.shock.setScrollFactor(0)
 
     this.cameras.main.startFollow(this.agar);
 
-    this.shock.setInteractive()
-    this.input.setDraggable(this.shock)
-
     this.moveShock = true
-    this.shock_dropzone.setVisible(false)
-    this.shock.setVisible(false)
+
+    // this.shock_dropzone.setVisible(false)
+    // this.shock.setVisible(false)
+
+    this.input.on("gameobjectdown",() => { })
 
     this.input.on("pointerdown", (gameObject, localX, localY) => {
-
+      // this.shock.x = this.input.mousePointer.x
       this.shock_dropzone.setVisible(true)
       this.shock.setVisible(true)
-
       this.moveShock = false
-      // let x = parseInt(gameObject.position.x.toFixed(0)), y = parseInt(gameObject.position.y.toFixed(0))
-      let x = this.input.mousePointer.worldX, y = this.input.mousePointer.worldY
+
+      let x = this.input.mousePointer.x,
+          y = this.input.mousePointer.y
+
       this.shock.x = x
       this.shock.y = y
-      this.shock_dropzone.x = x
-      this.shock_dropzone.y = y
+      // this.shock_dropzone.x = x
+      // this.shock_dropzone.y = y
     })
 
     this.input.on("pointermove", (gameObject) => {
-      // console.log("pointermove")
-      console.log(this.input.mousePointer.worldY)
-      // let x = parseInt(gameObject.position.x.toFixed(0)),
-      //     y = parseInt(gameObject.position.y.toFixed(0))
-
-      let x = this.input.mousePointer.worldX,
-          y = this.input.mousePointer.worldY
+      let x = this.input.mousePointer.x,
+          y = this.input.mousePointer.y
 
       this.shock.x = x
       this.shock.y = y
       if (this.moveShock === false) {
-        console.log("im clicing")
+
         this.where_go = []
         let angle = this.get_angle(this.shock_dropzone.x, this.shock_dropzone.y, this.shock.x, this.shock.y)
         this.get_route_by_angle(angle)
@@ -197,6 +196,9 @@ class SceneAgar extends Phaser.Scene {
       }
       this.shock_dropzone.x = x
       this.shock_dropzone.y = y
+
+      // this.shock.setScrollFactor(0)
+      // this.shock_dropzone.setScrollFactor(0)
     })
 
     this.input.on("pointerup", () => {
