@@ -17,44 +17,67 @@ class SceneAgar extends Phaser.Scene {
   }
 
   create() {
-    // this.scale.startFullscreen();
-    // this.cameras.main.setSize(300, 300);
+    // const cam = this.cameras.fromJSON({
+    //   name: '',
+    //   x: 0,
+    //   y: 0,
+    //   width: 500,
+    //   height: 500,
+    //   zoom: 2,
+    //   rotation: 0,
+    //   scrollX: -600,
+    //   scrollY: -200,
+    //   roundPixels: true,
+    //   visible: true,
+    //   backgroundColor: '#8888aa',
+    //   bounds: null,
+    // });
+    // console.log(this.cameras.cameras[1].pan(100, 100, 2000))
 
-    // this.graphics = this.add.graphics()
-    // this.graphics.lineStyle(5, 0xFF00FF, 1.0);
-    // this.graphics.beginPath();
-    // this.graphics.moveTo(0, 0);
-    // this.graphics.lineTo(200, 200);
-    // this.graphics.closePath();
-    // this.graphics.strokePath();
-    //
-    // this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
-    // this.graphics.beginPath();
-    // this.graphics.moveTo(1920, 1080);
-    // this.graphics.lineTo(200, 200);
-    // this.graphics.closePath();
-    // this.graphics.strokePath();
-    //
-    // this.graphics.lineStyle(5, 0xFFFF0F, 1.0);
-    // this.graphics.beginPath();
-    // this.graphics.moveTo(0, 1080);
-    // this.graphics.lineTo(200, 200);
-    // this.graphics.closePath();
-    // this.graphics.strokePath();
-    //
-    // this.graphics.lineStyle(5, 0xFFFF0F, 1.0);
-    // this.graphics.beginPath();
-    // this.graphics.moveTo(1920, 0);
-    // this.graphics.lineTo(200, 200);
-    // this.graphics.closePath();
-    // this.graphics.strokePath();
+    // this.cameras.main.setSize(1330, 975);
 
-    this.agar = this.matter.add.image(100, 100, "agar")
+    this.graphics = this.add.graphics()
+    this.graphics.lineStyle(5, 0xFF00FF, 1.0);
+    this.graphics.beginPath();
+    this.graphics.moveTo(0, 0);
+    this.graphics.lineTo(200, 200);
+    this.graphics.closePath();
+    this.graphics.strokePath();
+
+    this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
+    this.graphics.beginPath();
+    this.graphics.moveTo(1920, 1080);
+    this.graphics.lineTo(200, 200);
+    this.graphics.closePath();
+    this.graphics.strokePath();
+
+    this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
+    this.graphics.beginPath();
+    this.graphics.moveTo(1920, 0);
+    this.graphics.lineTo(1920, 1080);
+    this.graphics.closePath();
+    this.graphics.strokePath();
+
+    this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
+    this.graphics.beginPath();
+    this.graphics.moveTo(0, 0);
+    this.graphics.lineTo(1920, 0);
+    this.graphics.closePath();
+    this.graphics.strokePath();
+
+    this.graphics.lineStyle(5, 0xFFFF0F, 1.0);
+    this.graphics.beginPath();
+    this.graphics.moveTo(0, 0);
+    this.graphics.lineTo(0, 1080);
+    this.graphics.closePath();
+    this.graphics.strokePath();
+
+    this.agar = this.matter.add.image(1920/2, 768/2 - 200, "agar")
     // this.matter.add.image(150, 200, "agar")
     // this.matter.add.image(150, 250, "agar")
 
     this.moveTo = this.plugins.get('rexmovetoplugin').add(this.agar);
-    this.moveTo.setSpeed(100);
+    this.moveTo.setSpeed(200);
 
 
     let y2Pos = 90, x2Pos = 90, y1Pos = 100, x1Pos = 100
@@ -129,19 +152,25 @@ class SceneAgar extends Phaser.Scene {
 
 
     this.shock_dropzone = this.add.image(-150, -150, "shock_dropzone")
-
     this.shock = this.add.image(-150, -150, "shock")
+
+    this.cameras.main.startFollow(this.agar);
+
     this.shock.setInteractive()
     this.input.setDraggable(this.shock)
 
     this.moveShock = true
-    this.shockStartX = null
-    this.shockStartY = null
+    this.shock_dropzone.setVisible(false)
+    this.shock.setVisible(false)
 
-    this.input.on("pointerdown", (gameObject) => {
-      // console.log("pointerdown")
+    this.input.on("pointerdown", (gameObject, localX, localY) => {
+
+      this.shock_dropzone.setVisible(true)
+      this.shock.setVisible(true)
+
       this.moveShock = false
-      let x = parseInt(gameObject.position.x.toFixed(0)), y = parseInt(gameObject.position.y.toFixed(0))
+      // let x = parseInt(gameObject.position.x.toFixed(0)), y = parseInt(gameObject.position.y.toFixed(0))
+      let x = this.input.mousePointer.worldX, y = this.input.mousePointer.worldY
       this.shock.x = x
       this.shock.y = y
       this.shock_dropzone.x = x
@@ -150,12 +179,17 @@ class SceneAgar extends Phaser.Scene {
 
     this.input.on("pointermove", (gameObject) => {
       // console.log("pointermove")
-      let x = parseInt(gameObject.position.x.toFixed(0)), y = parseInt(gameObject.position.y.toFixed(0))
+      console.log(this.input.mousePointer.worldY)
+      // let x = parseInt(gameObject.position.x.toFixed(0)),
+      //     y = parseInt(gameObject.position.y.toFixed(0))
 
+      let x = this.input.mousePointer.worldX,
+          y = this.input.mousePointer.worldY
 
       this.shock.x = x
       this.shock.y = y
       if (this.moveShock === false) {
+        console.log("im clicing")
         this.where_go = []
         let angle = this.get_angle(this.shock_dropzone.x, this.shock_dropzone.y, this.shock.x, this.shock.y)
         this.get_route_by_angle(angle)
@@ -167,12 +201,8 @@ class SceneAgar extends Phaser.Scene {
 
     this.input.on("pointerup", () => {
       this.moveShock = true
-      // this.shock.x = this.shock_dropzone.x
-      // this.shock.y = this.shock_dropzone.y
-      this.shock_dropzone.x = -150
-      this.shock_dropzone.y = -150
-      this.shock.x = -150
-      this.shock.y = -150
+      this.shock_dropzone.setVisible(false)
+      this.shock.setVisible(false)
     })
 
     // this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
@@ -200,6 +230,7 @@ class SceneAgar extends Phaser.Scene {
   }
 
   update() {
+
     if (!this.moveIt) {
       this.tweens.add({
         targets: this.agar,
@@ -215,12 +246,13 @@ class SceneAgar extends Phaser.Scene {
       });
       this.moveIt = true
     }
-    console.log(this.agar.x)
+    // console.log(this.agar.x)
     if (this.where_go.length !== 0) {
       let xAndY = this.where_go[0]
       xAndY = xAndY.split("_")
       let x = parseInt(xAndY[0]), y = parseInt(xAndY[1])
-
+      if (y === -1 || x === -1)
+        return
       this.moveTo.moveTo({
         x: x,
         y: y
