@@ -169,15 +169,15 @@
   window.onload = function () {
     let config = {
       type: Phaser.AUTO,
-      width: 1920,
-      height: 1080,
+      width: 3000,
+      height: 3000,
       parent: 'phaser-game',
       antialias: true,
       transparent: false,
-      backgroundColor: '#4488aa',
+      backgroundColor: '#3b3b3b',
       scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.FIT
+        autoCenter: Phaser.Scale.RESIZE
       },
       physics: {
         default: 'matter',

@@ -34,8 +34,7 @@ class SceneAgar extends Phaser.Scene {
     // });
 
 
-    // this.cameras.main.zoom = 2
-
+    // console.log(window.innerHeight)
     this.graphics = this.add.graphics()
     this.graphics.lineStyle(5, 0xFF00FF, 1.0);
     this.graphics.beginPath();
@@ -46,39 +45,44 @@ class SceneAgar extends Phaser.Scene {
 
     this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
     this.graphics.beginPath();
-    this.graphics.moveTo(1920, 1080);
+    this.graphics.moveTo(game.config.width, game.config.height);
     this.graphics.lineTo(200, 200);
     this.graphics.closePath();
     this.graphics.strokePath();
 
     this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
     this.graphics.beginPath();
-    this.graphics.moveTo(1920, 0);
-    this.graphics.lineTo(1920, 1080);
+    this.graphics.moveTo(game.config.width, 0);
+    this.graphics.lineTo(game.config.width, game.config.height);
     this.graphics.closePath();
     this.graphics.strokePath();
 
     this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
     this.graphics.beginPath();
     this.graphics.moveTo(0, 0);
-    this.graphics.lineTo(1920, 0);
+    this.graphics.lineTo(game.config.width, 0);
     this.graphics.closePath();
     this.graphics.strokePath();
 
     this.graphics.lineStyle(5, 0xFFFF0F, 1.0);
     this.graphics.beginPath();
     this.graphics.moveTo(0, 0);
-    this.graphics.lineTo(0, 1080);
+    this.graphics.lineTo(0, game.config.height);
     this.graphics.closePath();
     this.graphics.strokePath();
 
-    this.agar = this.matter.add.image(1920/2, 768/2 - 200, "agar")
+    this.scale.setGameSize(1920, window.innerHeight);
+    console.log(game.config.width)
+
+    this.agar = this.matter.add.image(100, 100, "agar")
     // this.matter.add.image(150, 200, "agar")
     // this.matter.add.image(150, 250, "agar")
 
     this.moveTo = this.plugins.get('rexmovetoplugin').add(this.agar);
     this.moveTo.setSpeed(200);
-
+    // this.cameras.main.setSize(1920, 1080)
+    // this.cameras.main.removeBounds()
+    // this.cameras.main.setViewport(0, 0, 200, 200);
 
     let y2Pos = 90, x2Pos = 90, y1Pos = 100, x1Pos = 100
     var angle = Math.atan2(y2Pos - y1Pos, x2Pos - x1Pos) * 180 / Math.PI + 180;
@@ -129,7 +133,7 @@ class SceneAgar extends Phaser.Scene {
     }
 
     // console.log(lastX + "-" + lastY)
-    this.add.image(lastX, lastY, "agar")
+    // this.add.image(lastX, lastY, "agar")
 
     // this.where_go.shift()
     // this.where_go.shift()
@@ -151,22 +155,26 @@ class SceneAgar extends Phaser.Scene {
     // }
 
 
-    this.shock_dropzone = this.add.image(1920/2 + 200, 768/2, "shock_dropzone")//.setScrollFactor(0)
-    this.shock = this.add.image(1920/2 + 200, 768/2, "shock")//.setScrollFactor(0)
+    this.shock_dropzone = this.add.sprite(0, 0, "shock_dropzone").setScrollFactor(0)
+    this.shock = this.add.sprite(0, 0, "shock").setScrollFactor(0)//.setOrigin(0,0);
     // this.shock.setInteractive()
-    this.shock_dropzone.setScrollFactor(0)
-    this.shock.setScrollFactor(0)
 
     this.cameras.main.startFollow(this.agar);
-
     this.moveShock = true
 
     // this.shock_dropzone.setVisible(false)
     // this.shock.setVisible(false)
+    // this.cameras.main.setZoom(8)
+    // this.cameras.main.setSize(2300, 980)
+    // this.cameras.main.setBounds(0, 0, 700, 400);
+
+    // this.cameras.main._width = 200
+    // console.log(this.cameras.main)
 
     this.input.on("gameobjectdown",() => { })
 
     this.input.on("pointerdown", (gameObject, localX, localY) => {
+      // return
       // this.shock.x = this.input.mousePointer.x
       this.shock_dropzone.setVisible(true)
       this.shock.setVisible(true)
@@ -182,6 +190,11 @@ class SceneAgar extends Phaser.Scene {
     })
 
     this.input.on("pointermove", (gameObject) => {
+      // return;
+      // let x = this.input.mousePointer.x,
+      //     y = this.input.mousePointer.y
+
+
       let x = this.input.mousePointer.x,
           y = this.input.mousePointer.y
 
@@ -202,6 +215,7 @@ class SceneAgar extends Phaser.Scene {
     })
 
     this.input.on("pointerup", () => {
+      // return
       this.moveShock = true
       this.shock_dropzone.setVisible(false)
       this.shock.setVisible(false)
@@ -232,7 +246,8 @@ class SceneAgar extends Phaser.Scene {
   }
 
   update() {
-
+    // console.log(this.agar.x)
+    // this.cameras.main.zoom += 0.0025
     if (!this.moveIt) {
       this.tweens.add({
         targets: this.agar,
@@ -259,19 +274,6 @@ class SceneAgar extends Phaser.Scene {
         x: x,
         y: y
       });
-      // this.tweens.add({
-      //   targets: this.agar,
-      //   props: {
-      //     x: {
-      //       value: x, ease: ''
-      //     },
-      //     y: {
-      //       value: y, ease: ''
-      //     }
-      //   },
-      //   duration: 3500,
-      //   frameRate: 300
-      // });
 
       this.where_go.shift()
     }
@@ -317,7 +319,7 @@ class SceneAgar extends Phaser.Scene {
 
   get_route_by_angle(angle) {
     let ang = angle, lastY, lastX, setX = false, et = false
-    for (let r = 1; r <= 2000; r++) {
+    for (let r = 1; r <= game.config.width; r++) {
       var radius = r;
       var x = radius * Math.sin(Math.PI * 2 * ang / 360);
       var y = radius * Math.cos(Math.PI * 2 * ang / 360);
