@@ -97,6 +97,7 @@
 <script src="js/socket.io.js"></script>
 <script src="js/nineslice.js"></script>
 <!-- scenes -->
+<script src="js/scenes/sceneLoad.js"></script>
 <script src="js/scenes/sceneAgar.js"></script>
 <!-- mc -->
 <script src="js/constants.js"></script>
@@ -143,6 +144,8 @@
   // http://localhost:4853/
   // http://localhost:4855/
   // http://s.winnerapp.ir
+
+  const socket = new WebSocket("ws://localhost:8080/ws?d=game&client_id=1")
 
   // const socket = io('{{socket_url}}', {
   //   timeout: 60 * 1000,
@@ -195,8 +198,8 @@
         ],
       },
       scene: [
-        SceneAgar
         // SceneLoad,
+        SceneAgar
         // SceneWaiting,
         // SceneChessBoard
       ]

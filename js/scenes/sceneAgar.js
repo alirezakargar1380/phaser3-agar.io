@@ -1,6 +1,6 @@
 class SceneAgar extends Phaser.Scene {
   constructor() {
-    super();
+    super("SceneAgar");
     this.where_go = []
   }
 
@@ -71,15 +71,16 @@ class SceneAgar extends Phaser.Scene {
     this.graphics.closePath();
     this.graphics.strokePath();
 
-    this.scale.setGameSize(1920, window.innerHeight);
-    console.log(game.config.width)
+    this.scale.setGameSize(window.innerWidth, window.innerHeight);
 
-    this.agar = this.matter.add.image(100, 100, "agar")
+    this.agar = this.add.image(100, 100, "agar")
+    this.ghost_agar = this.add.image(100, 100, "agar").setAlpha(0.5)
     // this.matter.add.image(150, 200, "agar")
     // this.matter.add.image(150, 250, "agar")
 
-    this.moveTo = this.plugins.get('rexmovetoplugin').add(this.agar);
-    this.moveTo.setSpeed(200);
+    this.moveTo = this.plugins.get('rexmovetoplugin')
+        .add(this.ghost_agar);
+    this.moveTo.setSpeed(400);
     // this.cameras.main.setSize(1920, 1080)
     // this.cameras.main.removeBounds()
     // this.cameras.main.setViewport(0, 0, 200, 200);
@@ -162,17 +163,6 @@ class SceneAgar extends Phaser.Scene {
     this.cameras.main.startFollow(this.agar);
     this.moveShock = true
 
-    // this.shock_dropzone.setVisible(false)
-    // this.shock.setVisible(false)
-    // this.cameras.main.setZoom(8)
-    // this.cameras.main.setSize(2300, 980)
-    // this.cameras.main.setBounds(0, 0, 700, 400);
-
-    // this.cameras.main._width = 200
-    // console.log(this.cameras.main)
-
-    this.input.on("gameobjectdown",() => { })
-
     this.input.on("pointerdown", (gameObject, localX, localY) => {
       // return
       // this.shock.x = this.input.mousePointer.x
@@ -221,48 +211,48 @@ class SceneAgar extends Phaser.Scene {
       this.shock.setVisible(false)
     })
 
-    // this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-    //   console.log("drag")
-    //   this.where_go = []
-    //   // if (parseInt(dragX.toFixed(0)) <= (gameObject.input.dragStartX - 20))
-    //   //   return gameObject.y = dragY;
-    //   gameObject.x = dragX;
-    //   gameObject.y = dragY;
-    //   // console.log(gameObject.input.dragStartX)
-    //   let angle = this.get_angle(gameObject.input.dragStartX, gameObject.input.dragStartY, gameObject.x, gameObject.y)
-    //   this.get_route_by_angle(angle)
-    // }, this);
 
-    // this.input.on('dragend', function (pointer, gameObject, dropped) {
-    //   gameObject.x = gameObject.input.dragStartX;
-    //   gameObject.y = gameObject.input.dragStartY;
-    // }, this);
+    // console.log("helo")
+    // socket.send(JSON.stringify({
+    //   Command: "/hello",
+    //   Data: {
+    //     X: this.agar.x,
+    //     Y: this.agar.y,
+    //   }
+    // }))
+
+    socket.onmessage = ({data}) => {
+      try {
+        const message = JSON.parse(data)
+        console.log(message)
+        switch (message.Command) {
+          case "/new_agar":
+            this.agar.x = parseFloat(message.x)
+            this.agar.y = parseFloat(message.y)
+            break
+        }
+      } catch (e) {
+
+      }
+    }
+
 
     this.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
       bodyB.gameObject.destroy()
     });
 
-    this.moveIt = true
   }
 
   update() {
+    socket.send(JSON.stringify({
+      Command: "/hello",
+      Data: {
+        X: this.ghost_agar.x,
+        Y: this.ghost_agar.y,
+      }
+    }))
     // console.log(this.agar.x)
     // this.cameras.main.zoom += 0.0025
-    if (!this.moveIt) {
-      this.tweens.add({
-        targets: this.agar,
-        props: {
-          x: {
-            value: '0', ease: 'InOut'
-          },
-          y: {
-            value: '0', ease: 'InOut'
-          }
-        },
-        duration: 450
-      });
-      this.moveIt = true
-    }
     // console.log(this.agar.x)
     if (this.where_go.length !== 0) {
       let xAndY = this.where_go[0]
