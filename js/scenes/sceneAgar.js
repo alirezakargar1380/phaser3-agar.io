@@ -73,8 +73,13 @@ class SceneAgar extends Phaser.Scene {
 
     this.scale.setGameSize(window.innerWidth, window.innerHeight);
 
+    for (let i = 0; i <= 3000; i+=30) {
+      this.line({x: i, y: 0}, {x: i, y: 3000})
+      this.line({x: 0, y: i}, {x: 3000, y: i})
+    }
+
     this.agar = this.add.image(100, 100, "agar")
-    this.ghost_agar = this.add.image(100, 100, "agar").setAlpha(0.5)
+    this.ghost_agar = this.add.image(100, 100, "agar").setAlpha(0)
     // this.matter.add.image(150, 200, "agar")
     // this.matter.add.image(150, 250, "agar")
 
@@ -133,29 +138,6 @@ class SceneAgar extends Phaser.Scene {
       }
     }
 
-    // console.log(lastX + "-" + lastY)
-    // this.add.image(lastX, lastY, "agar")
-
-    // this.where_go.shift()
-    // this.where_go.shift()
-    // console.log(this.where_go)
-
-    // for (let a = 1; a <= 360; a++) {
-    //     var radius = 6;
-    //     var angle = a;
-    //     var x = radius * Math.sin(Math.PI * 2 * angle / 360);
-    //     var y = radius * Math.cos(Math.PI * 2 * angle / 360);
-    //
-    //     this.add.image(
-    //         (100 + Math.round(x * 100) / 100).toFixed(0),
-    //         (100 + Math.round(y * 100) / 100).toFixed(0),
-    //         "pixel")
-    //
-    //     console.log((100 + Math.round(x * 100) / 100).toFixed(0) + " " + (100 + Math.round(y * 100) / 100).toFixed(0))
-    //
-    // }
-
-
     this.shock_dropzone = this.add.sprite(0, 0, "shock_dropzone").setScrollFactor(0)
     this.shock = this.add.sprite(0, 0, "shock").setScrollFactor(0)//.setOrigin(0,0);
     // this.shock.setInteractive()
@@ -211,20 +193,9 @@ class SceneAgar extends Phaser.Scene {
       this.shock.setVisible(false)
     })
 
-
-    // console.log("helo")
-    // socket.send(JSON.stringify({
-    //   Command: "/hello",
-    //   Data: {
-    //     X: this.agar.x,
-    //     Y: this.agar.y,
-    //   }
-    // }))
-
     socket.onmessage = ({data}) => {
       try {
         const message = JSON.parse(data)
-        console.log(message)
         switch (message.Command) {
           case "/new_agar":
             this.agar.x = parseFloat(message.x)
@@ -236,11 +207,9 @@ class SceneAgar extends Phaser.Scene {
       }
     }
 
-
     this.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
       bodyB.gameObject.destroy()
     });
-
   }
 
   update() {
@@ -360,4 +329,13 @@ class SceneAgar extends Phaser.Scene {
 
   }
 
+  line(from_direction, to_direction) {
+    this.graphics.lineStyle(1, 0x000000, 1.0);
+    this.graphics.beginPath();
+    this.graphics.moveTo(from_direction.x, from_direction.y);
+    this.graphics.lineTo(to_direction.x, to_direction.y);
+    this.graphics.closePath();
+    this.graphics.strokePath();
+
+  }
 }
