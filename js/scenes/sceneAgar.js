@@ -40,7 +40,8 @@ class SceneAgar extends Phaser.Scene {
       this.line({x: 0, y: i}, {x: 3000, y: i})
     }
 
-    this.agar = this.add.image(60, 60, "agar")
+    // this.agar = this.add.image(60, 60, "agar")
+    this.agar = this.add.circle(0,0,60,0xffffff)
     this.ghost_agar = this.add.image(60, 60, "agar").setAlpha(0)
     // this.matter.add.image(150, 200, "agar")
     // this.matter.add.image(150, 250, "agar")
@@ -193,21 +194,21 @@ class SceneAgar extends Phaser.Scene {
     });
 
 
-    this.c = this.add.circle(0,0,60,0xffffff)
-    console.log(this.c)
+    // this.c = this.add.circle(0,0,60,0xffffff)
+    // console.log(this.c)
 
     setTimeout(() => {
       // this.c.radius=10
 
-      this.tweens.add({
-        targets: [this.c],
-        props: {
-          radius: {
-            value: 10,
-            duration: 500,
-          }
-        },
-      })
+      // this.tweens.add({
+      //   targets: [this.c],
+      //   props: {
+      //     radius: {
+      //       value: 10,
+      //       duration: 500,
+      //     }
+      //   },
+      // })
 
     },2000)
 
