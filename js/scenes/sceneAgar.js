@@ -177,7 +177,7 @@ class SceneAgar extends Phaser.Scene {
             this.agar.y = parseFloat(message.y)
             break
           case "/new_bead":
-            this.bead(parseInt(message.x), 300)
+            this.bead(parseInt(message.x), parseInt(message.y))
             // console.log(parseInt(message.x))
             // console.log(message.y)
             break
@@ -193,32 +193,23 @@ class SceneAgar extends Phaser.Scene {
     });
 
 
-    // socket.send(JSON.stringify({
-    //   Command: "/hello",
-    //   Data: {
-    //     X: this.ghost_agar.x,
-    //     Y: this.ghost_agar.y,
-    //   }
-    // }))
+    this.c = this.add.circle(0,0,60,0xffffff)
+    console.log(this.c)
 
-    // setTimeout(() => {
-    //   this.tweens.add({
-    //     targets: [this.agar],
-    //     props: {
-    //       scaleX: {
-    //         value: 1.2,
-    //         duration: 1000,
-    //       },
-    //       scaleY: {
-    //         value: 1.2,
-    //         duration: 1000,
-    //       },
-    //     },
-    //   })
-    //
-    //   this.moveTo.setSpeed(50);
-    // }, 3000)
+    setTimeout(() => {
+      // this.c.radius=10
 
+      this.tweens.add({
+        targets: [this.c],
+        props: {
+          radius: {
+            value: 10,
+            duration: 500,
+          }
+        },
+      })
+
+    },2000)
 
   }
 
