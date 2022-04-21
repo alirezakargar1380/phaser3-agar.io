@@ -17,75 +17,37 @@ class SceneAgar extends Phaser.Scene {
   }
 
   create() {
-    // const cam = this.cameras.fromJSON({
-    //   name: '',
-    //   x: 0,
-    //   y: 0,
-    //   width: 1920,
-    //   height: 500,
-    //   zoom: 1,
-    //   rotation: 0,
-    //   scrollX: 0,
-    //   scrollY: 0,
-    //   roundPixels: true,
-    //   visible: true,
-    //   backgroundColor: '#8888aa',
-    //   bounds: null,
-    // });
 
-
-    // console.log(window.innerHeight)
     this.graphics = this.add.graphics()
-    this.graphics.lineStyle(5, 0xFF00FF, 1.0);
-    this.graphics.beginPath();
-    this.graphics.moveTo(0, 0);
-    this.graphics.lineTo(200, 200);
-    this.graphics.closePath();
-    this.graphics.strokePath();
-
-    this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
-    this.graphics.beginPath();
-    this.graphics.moveTo(game.config.width, game.config.height);
-    this.graphics.lineTo(200, 200);
-    this.graphics.closePath();
-    this.graphics.strokePath();
-
-    this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
-    this.graphics.beginPath();
-    this.graphics.moveTo(game.config.width, 0);
-    this.graphics.lineTo(game.config.width, game.config.height);
-    this.graphics.closePath();
-    this.graphics.strokePath();
-
-    this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
-    this.graphics.beginPath();
-    this.graphics.moveTo(0, 0);
-    this.graphics.lineTo(game.config.width, 0);
-    this.graphics.closePath();
-    this.graphics.strokePath();
-
-    this.graphics.lineStyle(5, 0xFFFF0F, 1.0);
-    this.graphics.beginPath();
-    this.graphics.moveTo(0, 0);
-    this.graphics.lineTo(0, game.config.height);
-    this.graphics.closePath();
-    this.graphics.strokePath();
+    // this.graphics.lineStyle(5, 0xFF00FF, 1.0);
+    // this.graphics.beginPath();
+    // this.graphics.moveTo(0, 0);
+    // this.graphics.lineTo(200, 200);
+    // this.graphics.closePath();
+    // this.graphics.strokePath();
+    //
+    // this.graphics.lineStyle(5, 0xFFFFFF, 1.0);
+    // this.graphics.beginPath();
+    // this.graphics.moveTo(game.config.width, game.config.height);
+    // this.graphics.lineTo(200, 200);
+    // this.graphics.closePath();
+    // this.graphics.strokePath();
 
     this.scale.setGameSize(window.innerWidth, window.innerHeight);
 
-    for (let i = 0; i <= 3000; i+=30) {
+    for (let i = 0; i <= 3000; i += 30) {
       this.line({x: i, y: 0}, {x: i, y: 3000})
       this.line({x: 0, y: i}, {x: 3000, y: i})
     }
 
-    this.agar = this.add.image(100, 100, "agar")
-    this.ghost_agar = this.add.image(100, 100, "agar").setAlpha(0)
+    this.agar = this.add.image(60, 60, "agar")
+    this.ghost_agar = this.add.image(60, 60, "agar").setAlpha(0)
     // this.matter.add.image(150, 200, "agar")
     // this.matter.add.image(150, 250, "agar")
 
     this.moveTo = this.plugins.get('rexmovetoplugin')
         .add(this.ghost_agar);
-    this.moveTo.setSpeed(400);
+    this.moveTo.setSpeed(100);
     // this.cameras.main.setSize(1920, 1080)
     // this.cameras.main.removeBounds()
     // this.cameras.main.setViewport(0, 0, 200, 200);
@@ -98,45 +60,48 @@ class SceneAgar extends Phaser.Scene {
       console.log(Math.abs(angle.toFixed(0) - 270));
     }
 
-    let ang = 45, xx = 100, yy = 100, lastY, lastX, et = false
-    for (let r = 1; r <= 1500; r++) {
-      var radius = r;
-      var x = radius * Math.sin(Math.PI * 2 * ang / 360);
-      var y = radius * Math.cos(Math.PI * 2 * ang / 360);
-      x = (xx + Math.round(x * 100) / 100)//.toFixed(0)
-      y = (yy + Math.round(y * 100) / 100)//.toFixed(0)
 
-      if (x >= 0 && y >= 0) {
-        // this.where_go.push(x + "_" + y)
-        // console.log(x + "_" + y)
-      }
-
-      this.add.image(x, y, "pixel")
-      if (x >= game.config.width || y >= game.config.height) {
-        if (!et) {
-          lastX = x
-          lastY = y
-
-        }
-        et = true
-      }
-      if (x <= 0) {
-        if (!et) {
-          lastX = x
-          lastY = y
-
-        }
-        et = true
-      }
-      if (y <= 0) {
-        if (!et) {
-          lastX = x
-          lastY = y
-
-        }
-        et = true
-      }
-    }
+    // let xx = 300, yy = 100, lastY, lastX, et = false
+    // for (let ang = 1; ang <= 360; ang++) {
+    //   for (let r = 1; r <= 25; r++) {
+    //     var radius = r;
+    //     var x = radius * Math.sin(Math.PI * 2 * ang / 360);
+    //     var y = radius * Math.cos(Math.PI * 2 * ang / 360);
+    //     x = (xx + Math.round(x * 100) / 100)//.toFixed(0)
+    //     y = (yy + Math.round(y * 100) / 100)//.toFixed(0)
+    //
+    //     if (x >= 0 && y >= 0) {
+    //       // this.where_go.push(x + "_" + y)
+    //       // console.log(x + "_" + y)
+    //     }
+    //     console.log(x+" "+y)
+    //     this.add.image(x, y, "pixel")
+    //     if (x >= game.config.width || y >= game.config.height) {
+    //       if (!et) {
+    //         lastX = x
+    //         lastY = y
+    //
+    //       }
+    //       et = true
+    //     }
+    //     if (x <= 0) {
+    //       if (!et) {
+    //         lastX = x
+    //         lastY = y
+    //
+    //       }
+    //       et = true
+    //     }
+    //     if (y <= 0) {
+    //       if (!et) {
+    //         lastX = x
+    //         lastY = y
+    //
+    //       }
+    //       et = true
+    //     }
+    //   }
+    // }
 
     this.shock_dropzone = this.add.sprite(0, 0, "shock_dropzone").setScrollFactor(0)
     this.shock = this.add.sprite(0, 0, "shock").setScrollFactor(0)//.setOrigin(0,0);
@@ -144,6 +109,7 @@ class SceneAgar extends Phaser.Scene {
 
     this.cameras.main.startFollow(this.agar);
     this.moveShock = true
+
 
     this.input.on("pointerdown", (gameObject, localX, localY) => {
       // return
@@ -193,26 +159,98 @@ class SceneAgar extends Phaser.Scene {
       this.shock.setVisible(false)
     })
 
+    this.socket_status = true
+
+    socket.onclose = () => {
+      this.socket_status = false
+    }
+
     socket.onmessage = ({data}) => {
       try {
         const message = JSON.parse(data)
         switch (message.Command) {
           case "/new_agar":
+            if (message.size) {
+              this.updateBead(parseFloat(message.size).toFixed(1))
+            }
             this.agar.x = parseFloat(message.x)
             this.agar.y = parseFloat(message.y)
             break
+          case "/new_bead":
+            this.bead(parseInt(message.x), 300)
+            // console.log(parseInt(message.x))
+            // console.log(message.y)
+            break
         }
       } catch (e) {
-
+        console.log(data)
+        console.error("")
       }
     }
 
     this.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
       bodyB.gameObject.destroy()
     });
+
+
+    // socket.send(JSON.stringify({
+    //   Command: "/hello",
+    //   Data: {
+    //     X: this.ghost_agar.x,
+    //     Y: this.ghost_agar.y,
+    //   }
+    // }))
+
+    // setTimeout(() => {
+    //   this.tweens.add({
+    //     targets: [this.agar],
+    //     props: {
+    //       scaleX: {
+    //         value: 1.2,
+    //         duration: 1000,
+    //       },
+    //       scaleY: {
+    //         value: 1.2,
+    //         duration: 1000,
+    //       },
+    //     },
+    //   })
+    //
+    //   this.moveTo.setSpeed(50);
+    // }, 3000)
+
+
+  }
+
+  bead(x, y) {
+    const bead = this.add.image(x, y, "agar")
+    bead.displayWidth = 10
+    bead.displayHeight = 10
+  }
+
+  updateBead(size) {
+    this.tweens.add({
+      targets: [this.agar],
+      props: {
+        scaleX: {
+          value: size,
+          duration: 1000,
+        },
+        scaleY: {
+          value: size,
+          duration: 1000,
+        },
+      },
+    })
+
+    this.moveTo.setSpeed(this.moveTo.speed - (size * 2));
+    console.log(this.moveTo.speed)
   }
 
   update() {
+    if (!this.socket_status)
+      return
+
     socket.send(JSON.stringify({
       Command: "/hello",
       Data: {
@@ -220,9 +258,7 @@ class SceneAgar extends Phaser.Scene {
         Y: this.ghost_agar.y,
       }
     }))
-    // console.log(this.agar.x)
-    // this.cameras.main.zoom += 0.0025
-    // console.log(this.agar.x)
+
     if (this.where_go.length !== 0) {
       let xAndY = this.where_go[0]
       xAndY = xAndY.split("_")
@@ -236,32 +272,6 @@ class SceneAgar extends Phaser.Scene {
 
       this.where_go.shift()
     }
-
-    // var cursors = this.input.keyboard.createCursorKeys();
-    // if (cursors.up.isDown) {
-    //   if (this.cameras.main.scrollY === 0)
-    //     return
-    //   this.cameras.main.scrollY -= 1;
-    //   this.agar.y -= 1
-    // }
-    // if (cursors.down.isDown) {
-    //   if (this.cameras.main.scrollY === (1080 - 300))
-    //     return
-    //   this.cameras.main.scrollY += 1;
-    //   this.agar.y += 1
-    // }
-    // if (cursors.right.isDown) {
-    //   if (this.cameras.main.scrollX === (1920 - 300))
-    //     return
-    //   this.cameras.main.scrollX += 1;
-    //   this.agar.x += 1
-    // }
-    // if (cursors.left.isDown) {
-    //   if (this.cameras.main.scrollX === 0)
-    //     return
-    //   this.cameras.main.scrollX -= 1;
-    //   this.agar.x -= 1
-    // }
   }
 
   get_angle(x1, y1, x2, y2) {
@@ -277,7 +287,7 @@ class SceneAgar extends Phaser.Scene {
   }
 
   get_route_by_angle(angle) {
-    let ang = angle, lastY, lastX, setX = false, et = false
+    let ang = angle, lastY, lastX, et = false
     for (let r = 1; r <= game.config.width; r++) {
       var radius = r;
       var x = radius * Math.sin(Math.PI * 2 * ang / 360);
